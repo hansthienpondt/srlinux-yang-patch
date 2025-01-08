@@ -1,0 +1,50 @@
+module sdcio-srl-interfaces-deviations {
+  yang-version 1.1;
+  namespace "urn:sdcio.dev:srlinux:chassis:interfaces";
+  prefix sdcio-srl-if-deviations;
+
+  import srl_nokia-interfaces {
+    prefix srl_nokia-if;
+  }
+
+  organization
+    "Nokia";
+  contact
+    "SDCIO schema alterations
+     Web: <http://docs.sdcio.dev>";
+  description
+    "Model for managing network interfaces and subinterfaces.
+
+     This model reuses data items defined in the IETF YANG model for
+     interfaces described by RFC 7223";
+
+  revision 2024-11-04 {
+    description
+      "Initial deviation file.";
+    reference
+      "1.0.0";
+  }
+
+  deviation "/srl_nokia-if:interface/srl_nokia-if:subinterface/srl_nokia-if:type" {
+    description
+      "Indicates the context in which the ethernet subinterface will be used";
+    deviate add {
+      default "srl_nokia-if:routed";
+    }
+    deviate delete {
+      must "(starts-with(../../srl_nokia-if:name, 'ethernet') or starts-with(../../srl_nokia-if:name, 'lag') or starts-with(../../srl_nokia-if:name, 'lif') or starts-with(../../srl_nokia-if:name, 'enp') or starts-with(../../srl_nokia-if:name, 'vhn'))" {
+        error-message "type not supported on this interface";
+      }
+    }
+    deviate add {
+      must "(starts-with(../../srl_nokia-if:name, 'ethernet') or starts-with(../../srl_nokia-if:name, 'lag') or starts-with(../../srl_nokia-if:name, 'mgmt') or starts-with(../../srl_nokia-if:name, 'lif') or starts-with(../../srl_nokia-if:name, 'enp') or starts-with(../../srl_nokia-if:name, 'vhn'))" {
+        error-message "type not supported on this interface";
+      }
+    }
+    deviate add {
+      must "(. != 'srl_nokia-if:bridged') or (starts-with(../../srl_nokia-if:name, 'ethernet') or starts-with(../../srl_nokia-if:name, 'lag'))" {
+        error-message "bridged is not supported on this interface";
+      }
+    }
+  }
+}
