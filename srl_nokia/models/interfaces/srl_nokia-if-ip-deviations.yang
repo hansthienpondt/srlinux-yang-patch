@@ -7,6 +7,10 @@ module sdcio-srl-if-ip-deviations {
     prefix srl_nokia-if;
   }
 
+  import srl_nokia-common {
+    prefix srl_nokia-comm;
+  }
+
   organization
     "Nokia";
   contact
@@ -37,7 +41,7 @@ module sdcio-srl-if-ip-deviations {
         }
     }
     deviate add {
-        must "(. = 'disable' or (../../type != 'srl_nokia-if:bridged' and ../../type != 'srl_nokia-if:local-mirror-dest'))" {
+        must "(. = 'srl_nokia-comm:disable' or (../../type != 'srl_nokia-if:bridged' and ../../type != 'srl_nokia-if:local-mirror-dest'))" {
           error-message "ipv4 configuration not allowed on bridged or local-mirror-dest subinterfaces";
         }
     }
