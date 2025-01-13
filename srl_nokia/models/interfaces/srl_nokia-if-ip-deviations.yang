@@ -1,0 +1,49 @@
+module sdcio-srl-if-ip-deviations {
+  yang-version 1.1;
+  namespace "urn:sdcio.dev:srlinux:chassis:interfaces:ip";
+  prefix sdcio-srl-if-ip-deviations;
+
+  import srl_nokia-interfaces {
+    prefix srl_nokia-if;
+  }
+
+  import srl_nokia-common {
+    prefix srl_nokia-comm;
+  }
+
+  organization
+    "Nokia";
+  contact
+    "SDCIO schema alterations
+     Web: <http://docs.sdcio.dev>";
+  description
+    "Model for managing network subinterfaces ip information.
+
+     This model reuses data items defined in the IETF YANG model for
+     interfaces described by RFC 7223";
+
+  revision 2024-11-10 {
+    description
+      "Initial deviation file.";
+    reference
+      "1.0.0";
+  }
+
+  deviation "/srl_nokia-if:interface/srl_nokia-if:subinterface/srl_nokia-if:ipv4/srl_nokia-if:admin-state" {
+    description
+          "Enable/disable IPv4 on the subinterface
+
+          When set to enable, and even before an IPv4 address is configured, the subinterface starts to accept incoming packets with dest-ip 255.255.255.255, which is necessary to support dhcp-client functionality.";
+
+    deviate delete {
+        must "(. = 'disable' or (../../type != 'bridged' and ../../type != 'local-mirror-dest'))" {
+          error-message "ipv4 configuration not allowed on bridged or local-mirror-dest subinterfaces";
+        }
+    }
+    deviate add {
+        must "(. = 'srl_nokia-comm:disable' or (../../type != 'srl_nokia-if:bridged' and ../../type != 'srl_nokia-if:local-mirror-dest'))" {
+          error-message "ipv4 configuration not allowed on bridged or local-mirror-dest subinterfaces";
+        }
+    }
+  }
+}
