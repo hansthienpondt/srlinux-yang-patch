@@ -46,4 +46,18 @@ module sdcio-srl-if-ip-deviations {
         }
     }
   }
+
+  deviation "/srl_nokia-if:interface/srl_nokia-if:subinterface/srl_nokia-if:ipv6/srl_nokia-if:admin-state" {
+    deviate delete {
+        must "(. = 'disable' or (../../type != 'bridged' and ../../type != 'local-mirror-dest'))" {
+          error-message "ipv6 configuration not allowed on bridged or local-mirror-dest subinterfaces";
+        }
+    }
+    deviate add {
+        must "(. = 'srl_nokia-comm:disable' or (../../type != 'srl_nokia-if:bridged' and ../../type != 'srl_nokia-if:local-mirror-dest'))" {
+          error-message "ipv6 configuration not allowed on bridged or local-mirror-dest subinterfaces";
+        }
+    }
+  }
+
 }
