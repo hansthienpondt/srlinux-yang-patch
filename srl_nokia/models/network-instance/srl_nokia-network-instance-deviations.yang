@@ -1,54 +1,71 @@
 module sdcio-srl_nokia-network-instance-deviations {
-    yang-version 1.1;
-    namespace "urn:sdcio.dev:srlinux:net-inst:network-instance";
-    prefix sdcio-srl_nokia-network-instance-deviations;
+  yang-version 1.1;
+  namespace "urn:sdcio.dev:srlinux:net-inst:network-instance";
+  prefix sdcio-srl_nokia-network-instance-deviations;
 
-    import srl_nokia-network-instance {
-        prefix srl_nokia-netinst;
+  import srl_nokia-network-instance {
+    prefix srl_nokia-netinst;
+  }
+  import srl_nokia-tunnel-interfaces {
+    prefix srl_nokia-ti;
+  }
+  import srl_nokia-interfaces {
+    prefix srl_nokia-if;
+  }
+
+  organization
+    "Nokia";
+  contact
+    "SDCIO schema alterations
+     Web: <http://docs.sdcio.dev>";
+
+  revision 2025-01-31 {
+    description
+      "Initial deviation file.";
+    reference
+      "1.0.0";
+  }
+
+  deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:vxlan-interface" {
+    description
+      "The present path is missing a .. element";
+    deviate delete {
+      must '(/srl_nokia-netinst:network-instance[srl_nokia-netinst:name = current()/srl_nokia-netinst:name]/srl_nokia-netinst:type != "srl_nokia-netinst:default")' {
+        error-message "The bgp-evpn configuration is not possible on network-instance of type default.";
+      }
     }
-
-    import srl_nokia-tunnel-interfaces {
-        prefix srl_nokia-ti;
+    deviate add {
+      must '(/srl_nokia-netinst:network-instance[srl_nokia-netinst:name = current()/../srl_nokia-netinst:name]/srl_nokia-netinst:type != "srl_nokia-netinst:default")' {
+        error-message "The bgp-evpn configuration is not possible on network-instance of type default.";
+      }
     }
+  }
 
-    organization
-      "Nokia";
-    contact
-      "SDCIO schema alterations
-       Web: <http://docs.sdcio.dev>";
-
-    revision 2025-01-31 {
-        description
-          "Initial deviation file.";
-        reference
-          "1.0.0";
+  deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:vxlan-interface/srl_nokia-netinst:name" {
+    description
+      "The referenced vxlan-interface should exist";
+    deviate add {
+      must "/srl_nokia-ti:tunnel-interface[srl_nokia-ti:name = substring-before(current(), '.')]/srl_nokia-ti:vxlan-interface[srl_nokia-ti:index = substring-after(current(), '.')]/srl_nokia-ti:index" {
+        error-message "The referenced vxlan-tunnel interface does not exist.";
+      }
     }
+  }
 
-    deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:vxlan-interface" {
-        description
-          "The present path is missing a .. element";
-
-        deviate delete {
-          must '(/srl_nokia-netinst:network-instance[srl_nokia-netinst:name = current()/srl_nokia-netinst:name]/srl_nokia-netinst:type != "srl_nokia-netinst:default")' {
-            error-message "The bgp-evpn configuration is not possible on network-instance of type default.";
-          }
-        }
-        deviate add {
-          must '(/srl_nokia-netinst:network-instance[srl_nokia-netinst:name = current()/../srl_nokia-netinst:name]/srl_nokia-netinst:type != "srl_nokia-netinst:default")' {
-            error-message "The bgp-evpn configuration is not possible on network-instance of type default.";
-          }
-        }
+  deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:interface/srl_nokia-netinst:name" {
+    deviate delete {
+      must "./interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]/srl_nokia-if:type != 'local-mirror-dest'" {
+        error-message "subinterface with type local-mirror-dest cannot be configured on network-instance";
+      }
     }
-
- deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:vxlan-interface/srl_nokia-netinst:name" {
-        description
-          "The referenced vxlan-interface should exist";
-
-        deviate add {
-            must "/srl_nokia-ti:tunnel-interface[srl_nokia-ti:name = substring-before(current(), '.')]/srl_nokia-ti:vxlan-interface[srl_nokia-ti:index = substring-after(current(), '.')]/srl_nokia-ti:index" {
-                error-message
-                  "The referenced vxlan-tunnel interface does not exist.";
-            }
-        }
+    deviate add {
+      must "./interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]/srl_nokia-if:type != 'srl_nokia-if:local-mirror-dest'" {
+        error-message "subinterface with type local-mirror-dest cannot be configured on network-instance";
+      }
     }
+    deviate add {
+      must "./interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]" {
+        error-message "subinterface does not exist";
+      }
+    }
+  }
 }
