@@ -1,0 +1,31 @@
+module sdcio-srl_nokia-bgp-evpn-deviations {
+    yang-version 1.1;
+    namespace "urn:sdcio.dev:srlinux:net-inst:network-instance";
+    prefix sdcio-srl_nokia-bgp-evpn-deviations;
+
+    import srl_nokia-network-instance {
+        prefix srl_nokia-netinst;
+    }
+
+    organization
+      "Nokia";
+    contact
+      "SDCIO schema alterations
+       Web: <http://docs.sdcio.dev>";
+
+    revision 2025-03-06 {
+        description
+          "Initial deviation file.";
+        reference
+          "1.0.0";
+    }
+
+  deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:protocols/srl_nokia-netinst:bgp-evpn/srl_nokia-netinst:bgp-instance/srl_nokia-netinst:id" {
+    deviate replace {
+      type leafref {
+        path "../../../srl_bgp-vpn:bgp-vpn/srl_bgp-vpn:bgp-instance/srl_bgp-vpn:id";
+      }
+    }
+  }
+
+}
