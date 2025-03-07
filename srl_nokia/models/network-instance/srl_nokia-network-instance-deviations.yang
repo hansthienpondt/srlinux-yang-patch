@@ -53,17 +53,17 @@ module sdcio-srl_nokia-network-instance-deviations {
 
   deviation "/srl_nokia-netinst:network-instance/srl_nokia-netinst:interface/srl_nokia-netinst:name" {
     deviate delete {
-      must "./interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]/srl_nokia-if:type != 'local-mirror-dest'" {
+      must "../interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]/srl_nokia-if:type != 'local-mirror-dest'" {
         error-message "subinterface with type local-mirror-dest cannot be configured on network-instance";
       }
     }
     deviate add {
-      must "./interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]/srl_nokia-if:type != 'srl_nokia-if:local-mirror-dest'" {
+      must "../interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]/srl_nokia-if:type != 'srl_nokia-if:local-mirror-dest'" {
         error-message "subinterface with type local-mirror-dest cannot be configured on network-instance";
       }
     }
     deviate add {
-      must "./interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]" {
+      must "../interface-ref/interface or /srl_nokia-if:interface[srl_nokia-if:name=substring-before(current(), '.')]/srl_nokia-if:subinterface[srl_nokia-if:index=substring-after(current(), '.')]" {
         error-message "subinterface does not exist";
       }
     }

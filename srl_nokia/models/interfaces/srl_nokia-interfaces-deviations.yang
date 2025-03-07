@@ -37,7 +37,7 @@ module sdcio-srl-interfaces-deviations {
       }
     }
     deviate add {
-      must "(starts-with(../../srl_nokia-if:name, 'ethernet') or starts-with(../../srl_nokia-if:name, 'lag') or starts-with(../../srl_nokia-if:name, 'mgmt') or starts-with(../../srl_nokia-if:name, 'lif') or starts-with(../../srl_nokia-if:name, 'enp') or starts-with(../../srl_nokia-if:name, 'vhn'))" {
+      must "(starts-with(../../srl_nokia-if:name, 'ethernet') or starts-with(../../srl_nokia-if:name, 'lag') or starts-with(../../srl_nokia-if:name, 'mgmt') or starts-with(../../srl_nokia-if:name, 'irb') or starts-with(../../srl_nokia-if:name, 'system') or starts-with(../../srl_nokia-if:name, 'lif') or starts-with(../../srl_nokia-if:name, 'enp') or starts-with(../../srl_nokia-if:name, 'vhn'))" {
         error-message "type not supported on this interface";
       }
     }
